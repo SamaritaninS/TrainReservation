@@ -1,0 +1,76 @@
+﻿@model IEnumerable<TrainReservation.Models.Railways>
+@{
+    ViewData["Title"] = "ViewRailways";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>List of all Trains</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model =>model.RailwaysNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RailwaysName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Source)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Destination)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RailwaysNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RailwaysName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Source)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Destination)
+            </td>
+
+            <td>
+                <a asp-action="RailwaysDetails" asp-route-id="@item.RailwaysID">Details</a>
+            </td>
+
+            @* 
+                ----< Making the Edit and Delete option visible only to the Administrator >----
+                ----< There is only one admin as per the design and his credentials are saved in appSettings.json >----
+            *@
+            @{
+                if (User.IsInRole("Admin"))
+                {
+                    <td>
+                        <a asp-action="EditRailwayDetails" asp-route-id="@item.RailwaysID">Edit</a>
+                    </td>
+                    <td>
+                        <a asp-action="DeleteRailway" asp-route-id="@item.RailwaysID">Delete</a>
+                    </td>
+                }
+            }
+
+        </tr>
+        }
+
+            <form asp-controller="AddRailway" asp-action="AddRailway" method="get">
+                @{
+                    if (User.IsInRole("Admin"))
+                    {
+                        <input type="submit" value="Add Railway" class="btn btn-primary" />
+                    }
+                }
+            </form>
+    </tbody>
+</table>
+
